@@ -1,0 +1,10 @@
+<div *ngIf="contentData?.items" class="container dynamic-content">
+  <div class="row">
+    <div class="col-12">
+      <div *ngFor="let item of contentData?.items; let i = index">
+        <div [innerHTML]="item?.title | safeHtml"></div>
+        <div [innerHTML]="item?.content | safeHtml"></div>
+      </div>
+    </div>
+  </div>
+</div>

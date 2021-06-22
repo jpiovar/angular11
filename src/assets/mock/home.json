@@ -1,0 +1,57 @@
+{
+  "version": "1.0",
+  "href": "home",
+  "links": [
+    {
+      "href": "introduction",
+      "rel": "introduction",
+      "prompt": "Logo",
+      "label": "Starting",
+      "name": "introduction",
+      "render": "image",
+      "attrs": {
+        "src": "assets/img/meme.png",
+        "width": "56px",
+        "height": "66px"
+      }
+    },
+    {
+      "href": "",
+      "rel": "",
+      "prompt": "Let start",
+      "label": "Let start",
+      "name": "starting0",
+      "render": "label",
+      "attrs": {}
+    },
+
+    {
+      "href": "about",
+      "rel": "home/introduction",
+      "prompt": "Introduction",
+      "label": "Introduction",
+      "name": "home/introduction",
+      "render": "link",
+      "attrs": {}
+    },
+
+    {
+      "href": "",
+      "rel": "",
+      "prompt": "Rules",
+      "label": "Rules",
+      "name": "rules",
+      "render": "accordion-label",
+      "attrs": {}
+    },
+    {
+      "href": "site-structure",
+      "rel": "rules/site-structure",
+      "prompt": "Web structure",
+      "label": "Web structure",
+      "name": "rules/site-structure",
+      "render": "accordion-link",
+      "attrs": {}
+    }
+  ]
+}
