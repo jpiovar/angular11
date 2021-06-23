@@ -6,7 +6,7 @@
   "items": [
     {
       "title": "<h1 id='title' class='title'>Nadpis<a class='anchor' data-id='title'>#</a></h1>",
-      "content": "<p>Angular11 uvodna stranka. <img src='assets/img/meme.png' alt='meme' width='25%' height='25%'></p>"
+      "content": "<p>Angular11 uvodna stranka. <img src='assets/img/meme.png' alt='meme' width='25%' height='25%'><br><span id='open-dialog1'>open dialog</span></p>"
     }
   ]
 }

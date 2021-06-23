@@ -1,11 +1,13 @@
 import { SlicePipe } from '@angular/common';
 import { Component, Input, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { combineLatest, Subscription } from 'rxjs';
 import { AppState } from 'src/app/state';
 import { ConfigState } from 'src/app/state/config/config.models';
 import { StartSpinner, StopSpinner } from 'src/app/state/spinner/spinner.actions';
+import { DialogComponent } from '../dialog/dialog.component';
 
 type dynamicRoutes = '' | 'introduction' | 'getting-started/about-design-system' |
   'getting-started/for-designers' | 'getting-started/for-developers';
@@ -25,11 +27,13 @@ export class DynamicContentComponent implements OnInit, OnChanges, OnDestroy {
   subscription: Subscription = new Subscription();
   configData$: ConfigState = null;
   contentData: any = null;
+  dialogRef: MatDialogRef<any>;
 
   constructor(
     private store: Store<AppState>,
     private titleService: Title,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    public dialog: MatDialog,
   ) {
     const $scope = this;
     (<any> $('body')).on('click', '.anchor', function() {
@@ -38,8 +42,19 @@ export class DynamicContentComponent implements OnInit, OnChanges, OnDestroy {
       $scope.scroll(targetId);
       $scope.setUrlHash(targetId);
     });
+    (<any> $('body')).on('click', '#open-dialog1', function() {
+      // debugger;
+      $scope.openDialog();
+    });
   }
 
+  openDialog() {
+    // debugger;
+    this.dialogRef = this.dialog.open(DialogComponent, {
+      panelClass: 'dialog-class-1',
+      id: 'dialog-id-1'
+    });
+  }
 
   ngOnInit(): void { }
 
