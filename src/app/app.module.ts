@@ -33,6 +33,12 @@ import { reducer as toastr } from './state/toastr/toastr.reducer';
 import { ConfigEffects } from './state/config/config.effects';
 import { AppState } from './state';
 import { ConfigLoad } from './state/config/config.actions';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -46,6 +52,14 @@ import { ConfigLoad } from './state/config/config.actions';
     HttpClientModule,
     FormsModule,
     SharedModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'sk',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     ToastrModule.forRoot(),
     StoreModule.forRoot({
       router: routerReducer,

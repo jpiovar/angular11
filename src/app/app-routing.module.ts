@@ -3,6 +3,7 @@ import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './featured/home/containers/page-not-found/page-not-found.component';
 
 const routes: Routes = [
+  { path: 'home', loadChildren: () => import('./featured/home/home.module').then(m => m.HomeModule) },
   { path: 'introduction', loadChildren: () => import('./featured/home/home.module').then(m => m.HomeModule) },
   { path: 'page-not-found', component: PageNotFoundComponent, data: { page: 'page-not-found', label: 'Stranka nenajdena'} },
   { path: '', pathMatch: 'full', loadChildren: () => import('./featured/home/home.module').then(m => m.HomeModule) },

@@ -3,6 +3,6 @@
     "APP-NAME": "Angular11 {{value}}"
   },
   "HOME": {
-
+    "main": "welcome home"
   }
 }

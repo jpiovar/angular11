@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 // import { Title } from '@angular/platform-browser';
 // import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 // import { HttpBaseService } from './core/services/http.base.service';
 import { AppState } from './state';
@@ -18,13 +19,23 @@ export class AppComponent implements OnDestroy {
   openedSidenav: boolean = false;
   subscription: Subscription = new Subscription();
   configData$: ConfigState = null;
+  languageParam = { value: 'intro' };
+  translation: any;
 
   constructor(
     private store: Store<AppState>,
+    private translate: TranslateService,
     // private titleService: Title,
     // private router: Router,
     // private httpBase: HttpBaseService,
   ) {
+    translate.addLangs(['sk']);
+    translate.setDefaultLang('sk');
+    const browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/sk/) ? browserLang : 'sk');
+
+    this.translationSubscribe();
+
     // this.subscription.add(
     //   this.store.select('router').subscribe((res) => {
     //     // debugger;
@@ -55,6 +66,19 @@ export class AppComponent implements OnDestroy {
       })
     );
 
+  }
+
+  translationSubscribe() {
+    // currently just for example of usage
+    this.subscription.add(
+      this.translate.get('MAIN.APP-NAME', this.languageParam).subscribe((res: string) => {
+        console.log(res);
+      })
+    );
+
+    this.subscription.add(
+      this.translate.get('HOME').subscribe(obj => this.translation = obj)
+    );
   }
 
   ngOnDestroy(): void {

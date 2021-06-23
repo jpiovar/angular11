@@ -26,7 +26,7 @@
     },
 
     {
-      "href": "about",
+      "href": "introduction",
       "rel": "home/introduction",
       "prompt": "Introduction",
       "label": "Introduction",
