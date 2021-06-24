@@ -9,5 +9,5 @@ module.exports = () => ({
   home: home,
   introduction: introduction,
   'site-structure': siteStructure,
-  tableData: tableData
+  'table-data': tableData
 });

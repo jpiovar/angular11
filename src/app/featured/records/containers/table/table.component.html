@@ -1,29 +1,30 @@
-<div>
+<div class="container">
   <table class="table table-hover">
     <thead>
       <tr>
         <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
+        <th>Surname</th>
+        <th>Age</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
+      <tr *ngFor="let item of records">
+        <td>{{item.firstname}}</td>
+        <td>{{item.surname}}</td>
+        <td>{{item.age}}</td>
       </tr>
     </tbody>
   </table>
+  <ul class="pagination">
+    <li class="page-item">
+      <span class="page-link" (click)="previousPage()">Previous</span>
+    </li>
+    <li *ngFor="let itemP of pages; let i = index" class="page-item">
+      <span class="page-link" (click)="jumpToPage(i)">{{i+1}}</span>
+    </li>
+    <li class="page-item">
+      <span class="page-link" (click)="nextPage()">Next</span>
+    </li>
+  </ul>
 </div>
 

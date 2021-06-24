@@ -29,8 +29,11 @@ import { CustomSerializer, MergedRouterStateSerializer } from './shared/utils/ro
 import { reducer as spinner } from './state/spinner/spinner.reducer';
 import { reducer as config } from './state/config/config.reducer';
 import { reducer as toastr } from './state/toastr/toastr.reducer';
+import { reducer as records } from './state/records/records.reducer';
 
 import { ConfigEffects } from './state/config/config.effects';
+import { RecordsEffects } from './state/records/records.effects';
+
 import { AppState } from './state';
 import { ConfigLoad } from './state/config/config.actions';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -65,10 +68,12 @@ export function HttpLoaderFactory(http: HttpClient) {
       router: routerReducer,
       spinner,
       config,
-      toastr
+      toastr,
+      records
     }),
     EffectsModule.forRoot([
-      ConfigEffects
+      ConfigEffects,
+      RecordsEffects
     ]),
     StoreDevtoolsModule.instrument({
       name: 'NgRx tracker state', logOnly: environment.production
