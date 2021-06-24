@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   beOrigin: 'http://localhost:3000/',
   beHomeEndPoint: 'home',
-  beAdisVersionEndPoint: 'adisVersion'
+  beVersionEndPoint: 'version'
 };
 
 /*

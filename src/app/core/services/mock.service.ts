@@ -11,8 +11,8 @@ import { DataProviderService } from './data.provider.service';
 export class MockService {
   homeEndPoint: string;
   origin: string;
-  adisVersion: any;
-  adisVersionEndPoint: string;
+  version: any;
+  versionEndPoint: string;
 
   data1: Array<object> = [
     { name: 'Conor McGregor', wins: 21, losses: 3 },
@@ -49,19 +49,19 @@ export class MockService {
   ) {
     this.origin = environment.beOrigin;
     this.homeEndPoint = environment.beHomeEndPoint;
-    this.adisVersionEndPoint = environment.beAdisVersionEndPoint;
+    this.versionEndPoint = environment.beVersionEndPoint;
     // debugger;
     // this.dataProviderService.data;
   }
 
-  // async fetchDataAdisVersion() {
-  fetchDataAdisVersion() {
+  // async fetchDataVersion() {
+  fetchDataVersion() {
     return new Promise((resolve, reject) => {
       // debugger;
-      ajax.getJSON(`${this.origin}${this.adisVersionEndPoint}`)
+      ajax.getJSON(`${this.origin}${this.versionEndPoint}`)
         .subscribe(
           res => {
-            this.adisVersion = res;
+            this.version = res;
             resolve({ case: 'success', dataRes: res });
           },
           err => {
@@ -103,9 +103,9 @@ export class MockService {
     return new Observable((observer: Observer<any>) => {
 
       // debugger;
-      this.fetchDataAdisVersion().then((response) => {
+      this.fetchDataVersion().then((response) => {
         // debugger;
-        console.log('fetchDataAdisVersion resolved', response);
+        console.log('fetchDataVersion resolved', response);
 
         homeReq.subscribe((data: any) => {
           // debugger;
@@ -124,28 +124,15 @@ export class MockService {
             res[rel]['index'] = index;
             res[rel]['linkData'] = link;
             return ajax.getJSON(`${this.origin}${resource}`);
-            // return res;
           });
-          // arrObs.unshift(initialReq);
 
-          // arrObs.unshift(arrObs.pop());
-
-          // const jj =[];
-          // for (let i=0; i < arrObs.length; i++) {
-          //   jj.push(arrObs[i].pipe(mapTo('FIRST!')));
-          // }
-          // debugger;
-          // const obj = this.toObject(arrObs);
-          // if (content) {
-          // debugger;
-          // arrObs.unshift(content);
           zip(...arrObs).subscribe(
             (sub: any) => {
               console.log(sub);
               // debugger;
 
-              sub.push(this.adisVersion);
-              res['adisVersion'] = { index: sub.length - 1 };
+              sub.push(this.version);
+              res['version'] = { index: sub.length - 1 };
 
               Object.keys(res).forEach((key: string, index: number) => {
                 // debugger;
@@ -164,11 +151,11 @@ export class MockService {
       })
         .catch(error => {
           // debugger;
-          console.log('fetchDataAdisVersion error process done');
+          console.log('fetchDataVersion error process done');
         })
         .finally(() => {
           // debugger;
-          console.log('fetchDataAdisVersion process done');
+          console.log('fetchDataVersion process done');
         });
 
       // });
@@ -183,7 +170,7 @@ export class MockService {
     // debugger;
     const homeData = this.dataProviderService.data[this.homeEndPoint];
     const res = {};
-    res['adisVersion'] = this.dataProviderService.data['adisVersion'];
+    res['version'] = this.dataProviderService.data['version'];
     homeData?.links?.map((link: any, index: number) => {
       // debugger;
       const rel = link?.rel || `link${index}`;

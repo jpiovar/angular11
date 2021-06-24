@@ -53,9 +53,9 @@ export class ConfigEffects {
         // debugger;
         const endPoint: any = action.payload;
         // return this.httpBase.getCommon(`${this.origin}${urlRecords}`).pipe(
-        // return this.mockService.getCombined1(endPoint).pipe( // to call correct be side
+        return this.mockService.getCombined1(endPoint).pipe( // to call correct be side
         // return this.mockService.getCombined2().pipe(
-        return this.mockService.getCombinedData().pipe(
+        // return this.mockService.getCombinedData().pipe(
           map(
             (config: any) => {
               // debugger;
