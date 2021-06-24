@@ -6,6 +6,7 @@ const routes: Routes = [
   { path: 'home', loadChildren: () => import('./featured/home/home.module').then(m => m.HomeModule) },
   { path: 'introduction', loadChildren: () => import('./featured/home/home.module').then(m => m.HomeModule) },
   { path: 'page-not-found', component: PageNotFoundComponent, data: { page: 'page-not-found', label: 'Stranka nenajdena'} },
+  { path: 'records', loadChildren: () => import('./featured/records/records.module').then(m => m.RecordsModule) },
   { path: '', pathMatch: 'full', loadChildren: () => import('./featured/home/home.module').then(m => m.HomeModule) },
   // { path: '**', pathMatch: 'full', loadChildren: () => import('./featured/home/home.module').then(m => m.HomeModule) },
   // { path: '', redirectTo: 'introduction', pathMatch: 'full' },

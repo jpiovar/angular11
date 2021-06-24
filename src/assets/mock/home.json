@@ -52,6 +52,25 @@
       "name": "rules/site-structure",
       "render": "accordion-link",
       "attrs": {}
+    },
+
+    {
+      "href": "",
+      "rel": "",
+      "prompt": "Records",
+      "label": "Records",
+      "name": "records",
+      "render": "accordion-label",
+      "attrs": {}
+    },
+    {
+      "href": "",
+      "rel": "records/table",
+      "prompt": "Table",
+      "label": "Table",
+      "name": "records/table",
+      "render": "accordion-link",
+      "attrs": {}
     }
   ]
 }
