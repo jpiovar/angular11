@@ -95,7 +95,9 @@ export class TableComponent implements OnInit, OnDestroy {
       direction = 'desc';
       this.sortBy = '';
     }
-    this.records.sort(compareValues(colname, direction));
+    // this.records.sort(compareValues(colname, direction));
+    this.originalRecords.sort(compareValues(colname, direction));
+    this.processRecords(this.originalRecords);
   }
 
 
