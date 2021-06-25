@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog',
@@ -7,12 +7,23 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent implements OnInit {
+  content: any;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogComponent>
-  ) { }
+    public dialogRef: MatDialogRef<DialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit(): void {
+    this.initializeContent();
+  }
+
+  initializeContent() {
+    this.content = this.data;
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   confirm() {
@@ -24,5 +35,6 @@ export class DialogComponent implements OnInit {
     console.log('closed');
     this.dialogRef.close();
   }
+
 
 }

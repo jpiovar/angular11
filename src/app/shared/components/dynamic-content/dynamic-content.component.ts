@@ -52,7 +52,17 @@ export class DynamicContentComponent implements OnInit, OnChanges, OnDestroy {
     // debugger;
     this.dialogRef = this.dialog.open(DialogComponent, {
       panelClass: 'dialog-class-1',
-      id: 'dialog-id-1'
+      id: 'dialog-id-1',
+      // width: '800px',
+      // height: '300px',
+      data: {
+        title: 'dialog title',
+        text: `janko hrasko<br/>small little`
+      }
+    });
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 

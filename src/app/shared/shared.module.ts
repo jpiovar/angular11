@@ -4,6 +4,7 @@ import { HamburgerButtonComponent } from './components/hamburger-button/hamburge
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { DynamicContentComponent } from './components/dynamic-content/dynamic-content.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { MaterialModule } from '../material.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { DialogComponent } from './components/dialog/dialog.component';
     DialogComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule
   ],
   exports: [
     HamburgerButtonComponent,
