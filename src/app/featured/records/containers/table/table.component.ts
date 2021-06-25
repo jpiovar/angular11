@@ -5,6 +5,7 @@ import { compareValues } from 'src/app/shared/utils/helper';
 import { AppState } from 'src/app/state';
 import { RecordsLoad } from 'src/app/state/records/records.actions';
 import { environment } from 'src/environments/environment';
+import { compare } from 'natural-orderby';
 
 @Component({
   selector: 'app-table',
@@ -86,8 +87,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   sortByColumn(colname: string) {
-    // debugger;
-    let direction = '';
+    let direction: 'asc'|'desc';
     if (this.sortBy !== colname) {
       direction = 'asc';
       this.sortBy = colname;
@@ -96,7 +96,8 @@ export class TableComponent implements OnInit, OnDestroy {
       this.sortBy = '';
     }
     // this.records.sort(compareValues(colname, direction));
-    this.originalRecords.sort(compareValues(colname, direction));
+    // this.originalRecords.sort(compareValues(colname, direction));
+    this.originalRecords.sort((a, b) => compare({ order: direction })(a[colname], b[colname]));
     this.processRecords(this.originalRecords);
   }
 
