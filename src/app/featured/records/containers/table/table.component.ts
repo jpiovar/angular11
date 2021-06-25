@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { compareValues } from 'src/app/shared/utils/helper';
 import { AppState } from 'src/app/state';
 import { RecordsLoad } from 'src/app/state/records/records.actions';
 import { environment } from 'src/environments/environment';
@@ -19,6 +20,7 @@ export class TableComponent implements OnInit, OnDestroy {
   pages: any[] = [];
   itemsPerPage: number = 5;
   activePage: number = 0;
+  sortBy: string = 'firstname';
 
   constructor(private store: Store<AppState>) {
     this.origin = environment.beOrigin;
@@ -81,6 +83,19 @@ export class TableComponent implements OnInit, OnDestroy {
       this.activePage++;
       this.processRecords(this.originalRecords);
     }
+  }
+
+  sortByColumn(colname: string) {
+    // debugger;
+    let direction = '';
+    if (this.sortBy !== colname) {
+      direction = 'asc';
+      this.sortBy = colname;
+    } else {
+      direction = 'desc';
+      this.sortBy = '';
+    }
+    this.records.sort(compareValues(colname, direction));
   }
 
 
