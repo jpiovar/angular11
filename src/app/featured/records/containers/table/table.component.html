@@ -20,6 +20,11 @@
             <mat-icon *ngIf="sortByCol?.age==='desc'" aria-label="down icon">arrow_drop_down</mat-icon>
           </span>
         </th>
+        <th id="details">
+          <span>
+            Details
+          </span>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -27,6 +32,11 @@
         <td>{{item.firstname}}</td>
         <td>{{item.surname}}</td>
         <td>{{item.age}}</td>
+        <td class="td-link">
+          <span (click)="openViewEditDialog(item)">
+            <mat-icon aria-label="view-edit">preview</mat-icon>
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>

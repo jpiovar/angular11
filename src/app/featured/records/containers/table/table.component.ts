@@ -6,6 +6,8 @@ import { AppState } from 'src/app/state';
 import { RecordsLoad } from 'src/app/state/records/records.actions';
 import { environment } from 'src/environments/environment';
 import { compare } from 'natural-orderby';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-table',
@@ -23,8 +25,12 @@ export class TableComponent implements OnInit, OnDestroy {
   activePage: number = 0;
   sortBy: string = 'firstname';
   sortByCol: any = {};
+  dialogRef: MatDialogRef<any>;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    public dialog: MatDialog
+  ) {
     this.origin = environment.beOrigin;
     this.tableDataEndPoint = environment.beTableDataEndPoint;
     this.triggerTableLoad(this.origin, this.tableDataEndPoint);
@@ -62,7 +68,7 @@ export class TableComponent implements OnInit, OnDestroy {
   processRecords(records: any[]) {
     // debugger;
     this.pages = new Array(Math.ceil(records.length / this.itemsPerPage));
-    this.records = records.slice(this.activePage*this.itemsPerPage, this.activePage*this.itemsPerPage+this.itemsPerPage);
+    this.records = records.slice(this.activePage * this.itemsPerPage, this.activePage * this.itemsPerPage + this.itemsPerPage);
   }
 
   jumpToPage(page: number): void {
@@ -73,7 +79,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   previousPage() {
     // debugger;
-    if(this.activePage >= 1) {
+    if (this.activePage >= 1) {
       this.activePage--;
       this.processRecords(this.originalRecords);
     }
@@ -81,7 +87,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   nextPage() {
     // debugger;
-    if(this.activePage < this.pages.length-1) {
+    if (this.activePage < this.pages.length - 1) {
       this.activePage++;
       this.processRecords(this.originalRecords);
     }
@@ -103,6 +109,28 @@ export class TableComponent implements OnInit, OnDestroy {
     // this.originalRecords.sort(compareValues(colname, direction));
     this.originalRecords.sort((a, b) => compare({ order: direction })(a[colname], b[colname]));
     this.processRecords(this.originalRecords);
+  }
+
+  openViewEditDialog(item: any) {
+    // debugger;
+    this.dialogRef = this.dialog.open(DialogComponent, {
+      panelClass: 'view-edit-dialog-class',
+      id: 'view-edit-dialog-id',
+      // width: '800px',
+      // height: '300px',
+      data: {
+        title: 'Details dialog View/Edit',
+        details: {
+          firstname: item.firstname,
+          surname: item.surname,
+          age: item.age
+        }
+      }
+    });
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 

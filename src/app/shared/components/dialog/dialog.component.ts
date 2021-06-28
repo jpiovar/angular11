@@ -19,6 +19,7 @@ export class DialogComponent implements OnInit {
   }
 
   initializeContent() {
+    // debugger;
     this.content = this.data;
 
     this.dialogRef.afterClosed().subscribe(result => {

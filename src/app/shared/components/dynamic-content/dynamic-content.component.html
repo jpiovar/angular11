@@ -5,6 +5,9 @@
         <div [innerHTML]="item?.title | safeHtml"></div>
         <div [innerHTML]="item?.content | safeHtml"></div>
       </div>
+      <div>
+        <span (click)="openDialog(false)">Dialog with long text</span>
+      </div>
     </div>
   </div>
 </div>
