@@ -1,10 +1,25 @@
-<div class="container">
+<div class="container" id="table-records">
   <table class="table table-hover">
     <thead>
       <tr>
-        <th><span (click)="sortByColumn('firstname')">Firstname</span></th>
-        <th><span (click)="sortByColumn('surname')">Surname</span></th>
-        <th><span (click)="sortByColumn('age')">Age</span></th>
+        <th id="firstname">
+          <span class="th-link" (click)="sortByColumn('firstname')">Firstname
+            <mat-icon *ngIf="sortByCol?.firstname==='asc'" aria-label="up icon">arrow_drop_up</mat-icon>
+            <mat-icon *ngIf="sortByCol?.firstname==='desc'" aria-label="down icon">arrow_drop_down</mat-icon>
+          </span>
+        </th>
+        <th id="surname">
+          <span class="th-link" (click)="sortByColumn('surname')">Surname
+            <mat-icon *ngIf="sortByCol?.surname==='asc'" aria-label="up icon">arrow_drop_up</mat-icon>
+            <mat-icon *ngIf="sortByCol?.surname==='desc'" aria-label="down icon">arrow_drop_down</mat-icon>
+          </span>
+        </th>
+        <th id="age">
+          <span class="th-link" (click)="sortByColumn('age')">Age
+            <mat-icon *ngIf="sortByCol?.age==='asc'" aria-label="up icon">arrow_drop_up</mat-icon>
+            <mat-icon *ngIf="sortByCol?.age==='desc'" aria-label="down icon">arrow_drop_down</mat-icon>
+          </span>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -19,7 +34,8 @@
     <li class="page-item">
       <span class="page-link" (click)="previousPage()">Previous</span>
     </li>
-    <li *ngFor="let itemP of pages; let i = index" class="page-item">
+    <li *ngFor="let itemP of pages; let i = index" class="page-item"
+      [ngClass]="{'active': activePage === i}">
       <span class="page-link" (click)="jumpToPage(i)">{{i+1}}</span>
     </li>
     <li class="page-item">
@@ -27,4 +43,3 @@
     </li>
   </ul>
 </div>
-

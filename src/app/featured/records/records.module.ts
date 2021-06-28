@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RecordsRoutingModule } from './records-routing.module';
 import { TableComponent } from './containers/table/table.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MaterialModule } from 'src/app/material.module';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     SharedModule,
+    MaterialModule,
     RecordsRoutingModule
   ]
 })

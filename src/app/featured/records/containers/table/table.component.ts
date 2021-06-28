@@ -22,6 +22,7 @@ export class TableComponent implements OnInit, OnDestroy {
   itemsPerPage: number = 5;
   activePage: number = 0;
   sortBy: string = 'firstname';
+  sortByCol: any = {};
 
   constructor(private store: Store<AppState>) {
     this.origin = environment.beOrigin;
@@ -87,13 +88,16 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   sortByColumn(colname: string) {
+    this.sortByCol = {};
     let direction: 'asc'|'desc';
     if (this.sortBy !== colname) {
       direction = 'asc';
       this.sortBy = colname;
+      this.sortByCol[colname] = 'asc';
     } else {
       direction = 'desc';
       this.sortBy = '';
+      this.sortByCol[colname] = 'desc';
     }
     // this.records.sort(compareValues(colname, direction));
     // this.originalRecords.sort(compareValues(colname, direction));
