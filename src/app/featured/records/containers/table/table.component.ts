@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { compareValues } from 'src/app/shared/utils/helper';
+import { compareValues, getItemBasedId } from 'src/app/shared/utils/helper';
 import { AppState } from 'src/app/state';
-import { RecordsLoad } from 'src/app/state/records/records.actions';
+import { RecordLoadDetail, RecordsLoad } from 'src/app/state/records/records.actions';
 import { environment } from 'src/environments/environment';
 import { compare } from 'natural-orderby';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -17,6 +17,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 export class TableComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   tableDataEndPoint: string;
+  tableRecordEndPoint: string;
   origin: string;
   originalRecords: any[];
   records: any[];
@@ -26,6 +27,7 @@ export class TableComponent implements OnInit, OnDestroy {
   sortBy: string = 'firstname';
   sortByCol: any = {};
   dialogRef: MatDialogRef<any>;
+  openDialogId: string = '';
 
   constructor(
     private store: Store<AppState>,
@@ -33,6 +35,7 @@ export class TableComponent implements OnInit, OnDestroy {
   ) {
     this.origin = environment.beOrigin;
     this.tableDataEndPoint = environment.beTableDataEndPoint;
+    this.tableRecordEndPoint = environment.beTableRecordEndPoint;
     this.triggerTableLoad(this.origin, this.tableDataEndPoint);
     this.tableDataSubscription();
   }
@@ -50,6 +53,12 @@ export class TableComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RecordsLoad(url));
   }
 
+  triggerTableRecordLoad(origin: string, dataEndPoint: string, id: string): void {
+    // debugger;
+    const url = `${origin}${dataEndPoint}/${id}`;
+    this.store.dispatch(new RecordLoadDetail({ id, detail: url }));
+  }
+
   tableDataSubscription() {
     this.subscription.add(
       this.store.select('records')
@@ -60,6 +69,9 @@ export class TableComponent implements OnInit, OnDestroy {
             // debugger;
             this.originalRecords = JSON.parse(JSON.stringify(res.data));
             this.processRecords(this.originalRecords);
+            if (this.openDialogId) {
+              this.openViewEditDialog(this.openDialogId);
+            }
           }
         })
     );
@@ -111,25 +123,33 @@ export class TableComponent implements OnInit, OnDestroy {
     this.processRecords(this.originalRecords);
   }
 
-  openViewEditDialog(item: any) {
+  triggerOpenViewEditDialog(item: any) {
+    this.triggerTableRecordLoad(this.origin, this.tableRecordEndPoint, item.id);
+    this.openDialogId = item.id;
+  }
+
+  openViewEditDialog(id: string) {
     // debugger;
+    const recordDetail = getItemBasedId(this.records, id);
     this.dialogRef = this.dialog.open(DialogComponent, {
       panelClass: 'view-edit-dialog-class',
-      id: 'view-edit-dialog-id',
+      id: `view-edit-dialog-id-${id}`,
       // width: '800px',
       // height: '300px',
       data: {
         title: 'Details dialog View/Edit',
         details: {
-          firstname: item.firstname,
-          surname: item.surname,
-          age: item.age
+          firstname: recordDetail?.firstname,
+          surname: recordDetail?.surname,
+          age: recordDetail?.age,
+          details: recordDetail?.data?.details
         }
       }
     });
 
     this.dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+      this.openDialogId = '';
     });
   }
 

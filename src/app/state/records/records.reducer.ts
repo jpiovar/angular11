@@ -48,8 +48,8 @@ export function reducer(state = initialState, action: RecordsActions.Actions): R
       const rowId = action.payload.id;
       const detailData = action.payload.detail;
       const newState = JSON.parse(JSON.stringify(state.data));
-      const index = getIndexBasedId(newState.rows, rowId);
-      newState.rows[index]['data'] = detailData;
+      const index = getIndexBasedId(newState, rowId);
+      newState[index]['data'] = detailData;
       return {
         ...state,
         loading: false,
