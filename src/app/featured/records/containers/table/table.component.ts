@@ -65,7 +65,7 @@ export class TableComponent implements OnInit, OnDestroy {
         // .pipe(last())
         .subscribe((res: any) => {
           //  debugger;
-          if (res && res.data) {
+          if (res && !res.loading && res.data) {
             // debugger;
             this.originalRecords = JSON.parse(JSON.stringify(res.data));
             this.processRecords(this.originalRecords);
@@ -124,8 +124,9 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   triggerOpenViewEditDialog(item: any) {
-    this.triggerTableRecordLoad(this.origin, this.tableRecordEndPoint, item.id);
+    // debugger;
     this.openDialogId = item.id;
+    this.triggerTableRecordLoad(this.origin, this.tableRecordEndPoint, item.id);
   }
 
   openViewEditDialog(id: string) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
-import { switchMap, map, catchError, flatMap, mergeMap, delay } from 'rxjs/operators';
+import { switchMap, map, catchError, flatMap, mergeMap, delay, withLatestFrom } from 'rxjs/operators';
 import { forkJoin, Observable, Observer, of, throwError, zip } from 'rxjs';
 
 import {
@@ -25,12 +25,13 @@ import { ajax } from 'rxjs/ajax';
 import { Store } from '@ngrx/store';
 import { AppState } from '..';
 import { StartToastr } from '../toastr/toastr.actions';
+import { getItemBasedId } from 'src/app/shared/utils/helper';
 
 @Injectable()
 export class RecordsEffects {
 
   constructor(
-    private actions$: Actions,
+    private actions$: Actions<any>,
     private httpBase: HttpBaseService,
     private store: Store<AppState>
   ) {
@@ -60,13 +61,50 @@ export class RecordsEffects {
 
   // @Effect()
   // recordLoadDetails$ = this.actions$.pipe(
+  // recordLoadDetails$ = createEffect(() => this.actions$.pipe(
+  //   ofType(RECORD_LOAD_DETAIL),
+  //   switchMap(
+  //     (action: RecordLoadDetail) => {
+  //       // debugger;
+  //       const urlRecords: any = action.payload.detail;
+  //       const id = action.payload.id;
+  //       return this.httpBase.getCommon(`${urlRecords}`).pipe(
+  //         map(
+  //           (response: any) => {
+  //             // debugger;
+  //             const detail = response;
+  //             return new RecordLoadDetailSuccess({ id, detail });
+  //           }
+  //         ),
+  //         catchError(error => {
+  //           // debugger;
+  //           return of(new RecordLoadDetailFail(error));
+  //         })
+  //       );
+  //     }
+  //   )
+  // )
+  // );
+
+
   recordLoadDetails$ = createEffect(() => this.actions$.pipe(
     ofType(RECORD_LOAD_DETAIL),
-    switchMap(
-      (action: RecordLoadDetail) => {
+    withLatestFrom(this.store.select('records')),
+    mergeMap(([action, selector]) => {
         // debugger;
-        const urlRecords: any = action.payload.detail;
-        const id = action.payload.id;
+        const urlRecords: any =  action?.payload?.detail;
+        const id =  action?.payload?.id;
+        const recordsData = selector?.data;
+        const itemRecord = getItemBasedId(recordsData, id);
+        if (itemRecord?.data) {
+          const detail = JSON.parse(JSON.stringify(itemRecord.data));
+          if (detail['executed']) {
+            detail['executed']++;
+          } else {
+            detail['executed'] = 1;
+          }
+          return of(new RecordLoadDetailSuccess({ id, detail }));
+        }
         return this.httpBase.getCommon(`${urlRecords}`).pipe(
           map(
             (response: any) => {
@@ -80,10 +118,9 @@ export class RecordsEffects {
             return of(new RecordLoadDetailFail(error));
           })
         );
-      }
-    )
-  )
-  );
+    })
+  ));
+
 
   // @Effect()
   // recordSave$ = this.actions$.pipe(
