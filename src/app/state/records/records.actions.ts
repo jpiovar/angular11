@@ -30,7 +30,7 @@ export class RecordsLoadFail implements Action {
 
 export class RecordLoadDetail implements Action {
   readonly type = RECORD_LOAD_DETAIL;
-  constructor(public payload: { id: string, detail: any }) {
+  constructor(public payload: { id: string, detail: any, storeMode?: boolean}) {
     // debugger;
   }
 }

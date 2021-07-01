@@ -96,7 +96,7 @@ export class RecordsEffects {
         const id =  action?.payload?.id;
         const recordsData = selector?.data;
         const itemRecord = getItemBasedId(recordsData, id);
-        if (itemRecord?.data) {
+        if (action?.payload?.storeMode && itemRecord?.data) {
           const detail = JSON.parse(JSON.stringify(itemRecord.data));
           if (detail['executed']) {
             detail['executed']++;

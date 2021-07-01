@@ -56,7 +56,7 @@ export class TableComponent implements OnInit, OnDestroy {
   triggerTableRecordLoad(origin: string, dataEndPoint: string, id: string): void {
     // debugger;
     const url = `${origin}${dataEndPoint}/${id}`;
-    this.store.dispatch(new RecordLoadDetail({ id, detail: url }));
+    this.store.dispatch(new RecordLoadDetail({ id, detail: url, storeMode: true }));
   }
 
   tableDataSubscription() {
