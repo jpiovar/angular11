@@ -15,12 +15,28 @@
 <div mat-dialog-content class="mat-typography">
   <ng-container *ngIf="content; else mockText">
     <span [innerHTML]="content?.text | safeHtml"></span>
-    <span *ngIf="content?.details">
-      Firstname: {{content?.details?.firstname}}<br/>
-      Surname: {{content?.details?.surname}}<br/>
-      Age: {{content?.details?.age}}<br/>
-      Details: {{content?.details?.details}}
+    <span *ngIf="content?.details && (!content.mode || content.mode!=='edit'); then thenContentBlock else elseContentBlock">
     </span>
+    <ng-template #thenContentBlock>
+      <p class="text-right">
+        <button type="button" class="btn btn-primary m-1" (click)="content.mode='edit'">Edit mode</button>
+      </p>
+      Firstname: {{content?.details?.firstname}}<br />
+      Surname: {{content?.details?.surname}}<br />
+      Age: {{content?.details?.age}}<br />
+      Details: {{content?.details?.details}}
+    </ng-template>
+    <ng-template #elseContentBlock>
+      <p class="text-right">
+        <button type="button" class="btn btn-primary m-1" (click)="content.mode='view'; confirmChanges()">View mode and Confirm changes</button><br/>
+        <button type="button" class="btn btn-primary m-1" (click)="content.mode='view'; cancelChanges()">View mode and Cancel changes</button>
+      </p>
+      Firstname: <input type="text" id="firstname" name="firstname" [(ngModel)]="modifiedContent.details.firstname"><br />
+      Surname: <input type="text" id="surname" name="surname" [(ngModel)]="modifiedContent.details.surname"><br />
+      Age: <input type="text" id="age" name="age" [(ngModel)]="modifiedContent.details.age"><br />
+      Details: <input type="text" id="details" name="details" [(ngModel)]="modifiedContent.details.details">
+    </ng-template>
+
   </ng-container>
 
   <ng-template #mockText>
@@ -43,8 +59,8 @@
 </div>
 
 <mat-dialog-actions align="end">
-  <button type="button" class="btn btn-primary" (click)="confirm()">Confirm</button>
-  <button type="button" class="btn btn-default" (click)="close()">Close</button>
+  <button type="button" class="btn btn-primary m-1" (click)="submit()">Submit</button>
+  <button type="button" class="btn btn-default m-1" (click)="close()">Close</button>
 </mat-dialog-actions>
 
 

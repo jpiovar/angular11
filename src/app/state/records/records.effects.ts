@@ -91,33 +91,33 @@ export class RecordsEffects {
     ofType(RECORD_LOAD_DETAIL),
     withLatestFrom(this.store.select('records')),
     mergeMap(([action, selector]) => {
-        // debugger;
-        const urlRecords: any =  action?.payload?.detail;
-        const id =  action?.payload?.id;
-        const recordsData = selector?.data;
-        const itemRecord = getItemBasedId(recordsData, id);
-        if (action?.payload?.storeMode && itemRecord?.data) {
-          const detail = JSON.parse(JSON.stringify(itemRecord.data));
-          if (detail['executed']) {
-            detail['executed']++;
-          } else {
-            detail['executed'] = 1;
-          }
-          return of(new RecordLoadDetailSuccess({ id, detail }));
+      // debugger;
+      const urlRecords: any = action?.payload?.detail;
+      const id = action?.payload?.id;
+      const recordsData = selector?.data;
+      const itemRecord = getItemBasedId(recordsData, id);
+      if (action?.payload?.storeMode && itemRecord?.data) {
+        const detail = JSON.parse(JSON.stringify(itemRecord.data));
+        if (detail['executed']) {
+          detail['executed']++;
+        } else {
+          detail['executed'] = 1;
         }
-        return this.httpBase.getCommon(`${urlRecords}`).pipe(
-          map(
-            (response: any) => {
-              // debugger;
-              const detail = response;
-              return new RecordLoadDetailSuccess({ id, detail });
-            }
-          ),
-          catchError(error => {
+        return of(new RecordLoadDetailSuccess({ id, detail }));
+      }
+      return this.httpBase.getCommon(`${urlRecords}`).pipe(
+        map(
+          (response: any) => {
             // debugger;
-            return of(new RecordLoadDetailFail(error));
-          })
-        );
+            const detail = response;
+            return new RecordLoadDetailSuccess({ id, detail });
+          }
+        ),
+        catchError(error => {
+          // debugger;
+          return of(new RecordLoadDetailFail(error));
+        })
+      );
     })
   ));
 
@@ -128,34 +128,54 @@ export class RecordsEffects {
     ofType(RECORD_SAVE),
     switchMap(
       (action: RecordSave) => {
-        // debugger;
-        const endPoint: any = action.payload.endPoint;
-        // const endPoint = '';
-        const record: any = action.payload.record;
+        debugger;
+        const endPoint: any = action?.payload?.endPoint;
+        const record: any = action?.payload?.record;
         const actionType = action?.payload?.actionType;
-        // const httpBody = taxSubjectPersonCreateEvent();
-        return this.httpBase.postCommon(`${endPoint}`, record).pipe(
-          map(
-            (response: any) => {
-              // debugger;
-              const recRow = JSON.parse(JSON.stringify(record));
-              if (response && (response?.eventId === recRow.eventId || response?.id === recRow.eventId) ) {
-                delete recRow['event']['taxSubjectPerson']['basicDataRow'];
-                delete recRow['event']['taxSubjectPerson']['addressDataRow'];
-                const recordId = recRow?.event?.taxSubjectPerson.companyId || recRow?.event?.taxSubjectPerson.birthCode;
-                this.store.dispatch(new StartToastr({ text: `zaznam ${recordId} byl úspěšně uložen`, type: 'success', duration: 5000 }));
-                return new RecordSaveSuccess({ recordRow: recRow?.event?.taxSubjectPerson, actionType });
+
+        if (actionType === 'update') {
+          return this.httpBase.putCommon(`${endPoint}/${record.id}`, record).pipe(
+            map(
+              (response: any) => {
+                debugger;
+                const item = JSON.parse(JSON.stringify(record));
+                const itemId = item?.id;
+                this.store.dispatch(new StartToastr({ text: `record ${itemId} updated`, type: 'success', duration: 5000 }));
+                return new RecordSaveSuccess({ recordRow: item, actionType });
               }
-            }
-          ),
-          catchError(error => {
-            // debugger;
-            console.log(`${endPoint}`, error);
-            const recordId = record?.event?.taxSubjectPerson.companyId || record?.event?.taxSubjectPerson.birthCode;
-            this.store.dispatch(new StartToastr({ text: `zaznam ${recordId} nebyl uložen`, type: 'error', duration: 5000 }));
-            return of(new RecordSaveFail(error));
-          })
-        );
+            ),
+            catchError(error => {
+              debugger;
+              console.log(`${endPoint}`, error);
+              const recordId = record.id;
+              this.store.dispatch(new StartToastr({ text: `record ${recordId} did not update`, type: 'error', duration: 5000 }));
+              return of(new RecordSaveFail(error));
+            })
+          );
+        }
+        else if (actionType === 'new') {
+          return this.httpBase.postCommon(`${endPoint}`, record).pipe(
+            map(
+              (response: any) => {
+                debugger;
+                const recRow = JSON.parse(JSON.stringify(record));
+                if (response && (response?.eventId === recRow.eventId || response?.id === recRow.eventId)) {
+                  const recordId = recRow?.event?.taxSubjectPerson.companyId || recRow?.event?.taxSubjectPerson.birthCode;
+                  this.store.dispatch(new StartToastr({ text: `record ${recordId} added`, type: 'success', duration: 5000 }));
+                  return new RecordSaveSuccess({ recordRow: recRow?.event?.taxSubjectPerson, actionType });
+                }
+              }
+            ),
+            catchError(error => {
+              debugger;
+              console.log(`${endPoint}`, error);
+              const recordId = record?.event?.taxSubjectPerson.companyId || record?.event?.taxSubjectPerson.birthCode;
+              this.store.dispatch(new StartToastr({ text: `record ${recordId} did not add`, type: 'error', duration: 5000 }));
+              return of(new RecordSaveFail(error));
+            })
+          );
+        }
+
       }
     )
   )

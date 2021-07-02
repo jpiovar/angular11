@@ -56,7 +56,7 @@ export class TableComponent implements OnInit, OnDestroy {
   triggerTableRecordLoad(origin: string, dataEndPoint: string, id: string): void {
     // debugger;
     const url = `${origin}${dataEndPoint}/${id}`;
-    this.store.dispatch(new RecordLoadDetail({ id, detail: url, storeMode: true }));
+    this.store.dispatch(new RecordLoadDetail({ id, detail: url, storeMode: false }));
   }
 
   tableDataSubscription() {
@@ -143,8 +143,10 @@ export class TableComponent implements OnInit, OnDestroy {
           firstname: recordDetail?.firstname,
           surname: recordDetail?.surname,
           age: recordDetail?.age,
-          details: recordDetail?.data?.details
-        }
+          details: recordDetail?.data?.details,
+          id: recordDetail?.id
+        },
+        mode: 'view'
       }
     });
 
