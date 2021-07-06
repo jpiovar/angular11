@@ -30,37 +30,38 @@ export class DialogComponent implements OnInit {
   }
 
   initializeContent() {
-    debugger;
+    // debugger;
     this.content = this.data;
     this.modifiedContent = JSON.parse(JSON.stringify(this.content));
 
     this.dialogRef.afterClosed().subscribe(result => {
+      // debugger;
       console.log(`Dialog result: ${result}`);
     });
   }
 
   submit() {
-    debugger;
+    // debugger;
     const endPoint = `${this.origin}${this.tableRecordEndPoint}`;
     const record = this.content.details;
     const actionType = 'update';
     console.log('confirmed');
-    this.dialogRef.close();
+    this.dialogRef.close('submitBtn');
     this.store.dispatch(new RecordSave({ endPoint, record, actionType }));
   }
 
   close() {
     console.log('closed');
-    this.dialogRef.close();
+    this.dialogRef.close('closeBtn');
   }
 
   confirmChanges() {
-    debugger;
+    // debugger;
     this.content = JSON.parse(JSON.stringify(this.modifiedContent));
   }
 
   cancelChanges() {
-    debugger;
+    // debugger;
     this.modifiedContent = JSON.parse(JSON.stringify(this.content));
   }
 

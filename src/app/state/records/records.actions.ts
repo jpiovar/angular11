@@ -52,7 +52,7 @@ export class RecordLoadDetailFail implements Action {
 export class RecordSave implements Action {
   readonly type = RECORD_SAVE;
   constructor(public payload: { endPoint: string, record: any, actionType?: string }) {
-    debugger;
+    // debugger;
   }
 }
 

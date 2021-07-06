@@ -56,7 +56,7 @@ export class TableComponent implements OnInit, OnDestroy {
   triggerTableRecordLoad(origin: string, dataEndPoint: string, id: string): void {
     // debugger;
     const url = `${origin}${dataEndPoint}/${id}`;
-    this.store.dispatch(new RecordLoadDetail({ id, detail: url, storeMode: false }));
+    this.store.dispatch(new RecordLoadDetail({ id, detail: url, storeMode: true }));
   }
 
   tableDataSubscription() {
@@ -70,6 +70,7 @@ export class TableComponent implements OnInit, OnDestroy {
             this.originalRecords = JSON.parse(JSON.stringify(res.data));
             this.processRecords(this.originalRecords);
             if (this.openDialogId) {
+              // debugger;
               this.openViewEditDialog(this.openDialogId);
             }
           }
@@ -140,17 +141,24 @@ export class TableComponent implements OnInit, OnDestroy {
       data: {
         title: 'Details dialog View/Edit',
         details: {
-          firstname: recordDetail?.firstname,
-          surname: recordDetail?.surname,
-          age: recordDetail?.age,
+          firstname: recordDetail?.data?.firstname,
+          surname: recordDetail?.data?.surname,
+          age: recordDetail?.data?.age,
           details: recordDetail?.data?.details,
-          id: recordDetail?.id
+          id: recordDetail?.data?.id
         },
         mode: 'view'
       }
     });
 
+    this.dialogRef.beforeClosed().subscribe(result => {
+      // debugger;
+      console.log(`Dialog result: ${result}`);
+      this.openDialogId = '';
+    });
+
     this.dialogRef.afterClosed().subscribe(result => {
+      // debugger;
       console.log(`Dialog result: ${result}`);
       this.openDialogId = '';
     });

@@ -128,7 +128,7 @@ export class RecordsEffects {
     ofType(RECORD_SAVE),
     switchMap(
       (action: RecordSave) => {
-        debugger;
+        // debugger;
         const endPoint: any = action?.payload?.endPoint;
         const record: any = action?.payload?.record;
         const actionType = action?.payload?.actionType;
@@ -137,7 +137,7 @@ export class RecordsEffects {
           return this.httpBase.putCommon(`${endPoint}/${record.id}`, record).pipe(
             map(
               (response: any) => {
-                debugger;
+                // debugger;
                 const item = JSON.parse(JSON.stringify(record));
                 const itemId = item?.id;
                 this.store.dispatch(new StartToastr({ text: `record ${itemId} updated`, type: 'success', duration: 5000 }));
@@ -145,7 +145,7 @@ export class RecordsEffects {
               }
             ),
             catchError(error => {
-              debugger;
+              // debugger;
               console.log(`${endPoint}`, error);
               const recordId = record.id;
               this.store.dispatch(new StartToastr({ text: `record ${recordId} did not update`, type: 'error', duration: 5000 }));
@@ -157,7 +157,7 @@ export class RecordsEffects {
           return this.httpBase.postCommon(`${endPoint}`, record).pipe(
             map(
               (response: any) => {
-                debugger;
+                // debugger;
                 const recRow = JSON.parse(JSON.stringify(record));
                 if (response && (response?.eventId === recRow.eventId || response?.id === recRow.eventId)) {
                   const recordId = recRow?.event?.taxSubjectPerson.companyId || recRow?.event?.taxSubjectPerson.birthCode;
@@ -167,7 +167,7 @@ export class RecordsEffects {
               }
             ),
             catchError(error => {
-              debugger;
+              // debugger;
               console.log(`${endPoint}`, error);
               const recordId = record?.event?.taxSubjectPerson.companyId || record?.event?.taxSubjectPerson.birthCode;
               this.store.dispatch(new StartToastr({ text: `record ${recordId} did not add`, type: 'error', duration: 5000 }));

@@ -75,7 +75,7 @@ export function reducer(state = initialState, action: RecordsActions.Actions): R
     }
 
     case RecordsActions.RECORD_SAVE_SUCCESS: {
-      debugger;
+      // debugger;
       const actionType = action.payload.actionType || 'new';
       const recordRow = action.payload.recordRow;
       const rowId = recordRow.id;
