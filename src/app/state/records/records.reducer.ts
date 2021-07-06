@@ -44,7 +44,7 @@ export function reducer(state = initialState, action: RecordsActions.Actions): R
     }
 
     case RecordsActions.RECORD_LOAD_DETAIL_SUCCESS: {
-      // debugger;
+      debugger;
       const rowId = action.payload.id;
       const detailData = action.payload.detail;
       const newState = JSON.parse(JSON.stringify(state.data));

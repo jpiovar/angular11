@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { compareValues, getItemBasedId } from 'src/app/shared/utils/helper';
+import { compareValues, getIndexBasedId, getItemBasedId } from 'src/app/shared/utils/helper';
 import { AppState } from 'src/app/state';
 import { RecordLoadDetail, RecordsLoad } from 'src/app/state/records/records.actions';
 import { environment } from 'src/environments/environment';
@@ -28,6 +28,7 @@ export class TableComponent implements OnInit, OnDestroy {
   sortByCol: any = {};
   dialogRef: MatDialogRef<any>;
   openDialogId: string = '';
+  dialogAction: string = '';
 
   constructor(
     private store: Store<AppState>,
@@ -66,16 +67,24 @@ export class TableComponent implements OnInit, OnDestroy {
         .subscribe((res: any) => {
           //  debugger;
           if (res && !res.loading && res.data) {
-            // debugger;
+            debugger;
             this.originalRecords = JSON.parse(JSON.stringify(res.data));
-            this.processRecords(this.originalRecords);
-            if (this.openDialogId) {
+            if (!this.openDialogId && !this.dialogAction) {
+              this.processRecords(this.originalRecords);
+            } else if (this.openDialogId) {
               // debugger;
+              this.processTargetRecord(this.openDialogId);
               this.openViewEditDialog(this.openDialogId);
             }
           }
         })
     );
+  }
+
+  processTargetRecord(recordId: string) {
+    const indexR = getIndexBasedId(this.records, recordId);
+    const indexOr = getIndexBasedId(this.originalRecords, recordId);
+    this.records[indexR] = JSON.parse(JSON.stringify(this.originalRecords[indexOr]));
   }
 
   processRecords(records: any[]) {
@@ -131,7 +140,8 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   openViewEditDialog(id: string) {
-    // debugger;
+    debugger;
+    this.dialogAction = '';
     const recordDetail = getItemBasedId(this.records, id);
     this.dialogRef = this.dialog.open(DialogComponent, {
       panelClass: 'view-edit-dialog-class',
@@ -152,16 +162,17 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.dialogRef.beforeClosed().subscribe(result => {
-      // debugger;
+      debugger;
       console.log(`Dialog result: ${result}`);
+      this.dialogAction = result;
       this.openDialogId = '';
     });
 
-    this.dialogRef.afterClosed().subscribe(result => {
-      // debugger;
-      console.log(`Dialog result: ${result}`);
-      this.openDialogId = '';
-    });
+    // this.dialogRef.afterClosed().subscribe(result => {
+    //   debugger;
+    //   console.log(`Dialog result: ${result}`);
+    //   this.openDialogId = '';
+    // });
   }
 
 
