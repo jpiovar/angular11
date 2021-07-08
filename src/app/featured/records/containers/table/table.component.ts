@@ -20,6 +20,7 @@ export class TableComponent implements OnInit, OnDestroy {
   tableRecordEndPoint: string;
   origin: string;
   originalRecords: any[];
+  sortedOriginalRecords: any[];
   records: any[];
   pages: any[] = [];
   itemsPerPage: number = 5;
@@ -27,8 +28,9 @@ export class TableComponent implements OnInit, OnDestroy {
   sortBy: string = 'firstname';
   sortByCol: any = {};
   dialogRef: MatDialogRef<any>;
-  openDialogId: string = '';
+  recordId: string = '';
   dialogAction: string = '';
+  tableMode: 'init'|'modal'|'' = '';
 
   constructor(
     private store: Store<AppState>,
@@ -37,6 +39,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.origin = environment.beOrigin;
     this.tableDataEndPoint = environment.beTableDataEndPoint;
     this.tableRecordEndPoint = environment.beTableRecordEndPoint;
+    this.tableMode = 'init';
     this.triggerTableLoad(this.origin, this.tableDataEndPoint);
     this.tableDataSubscription();
   }
@@ -55,7 +58,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   triggerTableRecordLoad(origin: string, dataEndPoint: string, id: string): void {
-    // debugger;
+    debugger;
     const url = `${origin}${dataEndPoint}/${id}`;
     this.store.dispatch(new RecordLoadDetail({ id, detail: url, storeMode: true }));
   }
@@ -69,41 +72,55 @@ export class TableComponent implements OnInit, OnDestroy {
           if (res && !res.loading && res.data) {
             debugger;
             this.originalRecords = JSON.parse(JSON.stringify(res.data));
-            if (!this.openDialogId && !this.dialogAction) {
-              this.processRecords(this.originalRecords);
-            } else if (this.openDialogId) {
+            if (this.tableMode==='init') {
+              this.sortedOriginalRecords = JSON.parse(JSON.stringify(this.originalRecords));
+              this.sortByColumn(this.sortBy);
+              this.setPagesRecords();
+            } else if (this.tableMode==='modal' && this.recordId) {
               // debugger;
-              this.processTargetRecord(this.openDialogId);
-              this.openViewEditDialog(this.openDialogId);
+              this.setTargetSortedRecord(this.recordId);
+              this.setTargetRecord(this.recordId);
+              this.openViewEditDialog(this.recordId);
             }
           }
         })
     );
   }
 
-  processTargetRecord(recordId: string) {
+  setTargetSortedRecord(recordId: string) {
+    debugger;
     const indexR = getIndexBasedId(this.records, recordId);
+    const indexSor = getIndexBasedId(this.sortedOriginalRecords, recordId);
     const indexOr = getIndexBasedId(this.originalRecords, recordId);
     this.records[indexR] = JSON.parse(JSON.stringify(this.originalRecords[indexOr]));
+    this.sortedOriginalRecords[indexSor] = JSON.parse(JSON.stringify(this.originalRecords[indexOr]));
   }
 
-  processRecords(records: any[]) {
-    // debugger;
-    this.pages = new Array(Math.ceil(records.length / this.itemsPerPage));
-    this.records = records.slice(this.activePage * this.itemsPerPage, this.activePage * this.itemsPerPage + this.itemsPerPage);
+  setTargetRecord(recordId: string) {
+    debugger;
+    const indexR = getIndexBasedId(this.records, recordId);
+    const indexSor = getIndexBasedId(this.sortedOriginalRecords, recordId);
+    this.records[indexR] = JSON.parse(JSON.stringify(this.sortedOriginalRecords[indexSor]));
+  }
+
+  setPagesRecords() {
+    debugger;
+    this.tableMode = '';
+    this.pages = new Array(Math.ceil(this.sortedOriginalRecords.length / this.itemsPerPage));
+    this.records = this.sortedOriginalRecords.slice(this.activePage * this.itemsPerPage, this.activePage * this.itemsPerPage + this.itemsPerPage);
   }
 
   jumpToPage(page: number): void {
     // debugger;
     this.activePage = page;
-    this.processRecords(this.originalRecords);
+    this.setPagesRecords();
   }
 
   previousPage() {
     // debugger;
     if (this.activePage >= 1) {
       this.activePage--;
-      this.processRecords(this.originalRecords);
+      this.setPagesRecords();
     }
   }
 
@@ -111,7 +128,7 @@ export class TableComponent implements OnInit, OnDestroy {
     // debugger;
     if (this.activePage < this.pages.length - 1) {
       this.activePage++;
-      this.processRecords(this.originalRecords);
+      this.setPagesRecords();
     }
   }
 
@@ -128,14 +145,15 @@ export class TableComponent implements OnInit, OnDestroy {
       this.sortByCol[colname] = 'desc';
     }
     // this.records.sort(compareValues(colname, direction));
-    // this.originalRecords.sort(compareValues(colname, direction));
-    this.originalRecords.sort((a, b) => compare({ order: direction })(a[colname], b[colname]));
-    this.processRecords(this.originalRecords);
+    // this.sortedOriginalRecords.sort(compareValues(colname, direction));
+    this.sortedOriginalRecords.sort((a, b) => compare({ order: direction })(a[colname], b[colname]));
+    this.setPagesRecords();
   }
 
   triggerOpenViewEditDialog(item: any) {
-    // debugger;
-    this.openDialogId = item.id;
+    debugger;
+    this.recordId = item.id;
+    this.tableMode = 'modal';
     this.triggerTableRecordLoad(this.origin, this.tableRecordEndPoint, item.id);
   }
 
@@ -165,14 +183,17 @@ export class TableComponent implements OnInit, OnDestroy {
       debugger;
       console.log(`Dialog result: ${result}`);
       this.dialogAction = result;
-      this.openDialogId = '';
+      this.recordId = '';
+      this.tableMode = '';
     });
 
-    // this.dialogRef.afterClosed().subscribe(result => {
-    //   debugger;
-    //   console.log(`Dialog result: ${result}`);
-    //   this.openDialogId = '';
-    // });
+    this.dialogRef.afterClosed().subscribe(result => {
+      // debugger;
+      console.log(`Dialog result: ${result}`);
+      this.dialogAction = result;
+      this.recordId = '';
+      this.tableMode = '';
+    });
   }
 
 
