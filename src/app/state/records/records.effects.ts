@@ -91,7 +91,7 @@ export class RecordsEffects {
     ofType(RECORD_LOAD_DETAIL),
     withLatestFrom(this.store.select('records')),
     mergeMap(([action, selector]) => {
-      debugger;
+      // debugger;
       const urlRecords: any = action?.payload?.detail;
       const id = action?.payload?.id;
       const recordsData = selector?.data;

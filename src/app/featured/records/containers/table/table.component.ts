@@ -30,7 +30,7 @@ export class TableComponent implements OnInit, OnDestroy {
   dialogRef: MatDialogRef<any>;
   recordId: string = '';
   dialogAction: string = '';
-  tableMode: 'init'|'modal'|'' = '';
+  tableMode: 'init'|'load'|'save'|'' = '';
 
   constructor(
     private store: Store<AppState>,
@@ -58,7 +58,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   triggerTableRecordLoad(origin: string, dataEndPoint: string, id: string): void {
-    debugger;
+    // debugger;
     const url = `${origin}${dataEndPoint}/${id}`;
     this.store.dispatch(new RecordLoadDetail({ id, detail: url, storeMode: true }));
   }
@@ -70,17 +70,18 @@ export class TableComponent implements OnInit, OnDestroy {
         .subscribe((res: any) => {
           //  debugger;
           if (res && !res.loading && res.data) {
-            debugger;
+            // debugger;
             this.originalRecords = JSON.parse(JSON.stringify(res.data));
-            if (this.tableMode==='init') {
+            if (this.tableMode === 'init') {
               this.sortedOriginalRecords = JSON.parse(JSON.stringify(this.originalRecords));
               this.sortByColumn(this.sortBy);
               this.setPagesRecords();
-            } else if (this.tableMode==='modal' && this.recordId) {
+            } else if (this.tableMode === 'load' && this.recordId) {
               // debugger;
               this.setTargetSortedRecord(this.recordId);
-              this.setTargetRecord(this.recordId);
               this.openViewEditDialog(this.recordId);
+            } else if (this.tableMode === 'save' && this.recordId) {
+              this.setTargetSortedRecord(this.recordId);
             }
           }
         })
@@ -88,7 +89,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   setTargetSortedRecord(recordId: string) {
-    debugger;
+    // debugger;
     const indexR = getIndexBasedId(this.records, recordId);
     const indexSor = getIndexBasedId(this.sortedOriginalRecords, recordId);
     const indexOr = getIndexBasedId(this.originalRecords, recordId);
@@ -97,14 +98,14 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   setTargetRecord(recordId: string) {
-    debugger;
+    // debugger;
     const indexR = getIndexBasedId(this.records, recordId);
     const indexSor = getIndexBasedId(this.sortedOriginalRecords, recordId);
     this.records[indexR] = JSON.parse(JSON.stringify(this.sortedOriginalRecords[indexSor]));
   }
 
   setPagesRecords() {
-    debugger;
+    // debugger;
     this.tableMode = '';
     this.pages = new Array(Math.ceil(this.sortedOriginalRecords.length / this.itemsPerPage));
     this.records = this.sortedOriginalRecords.slice(this.activePage * this.itemsPerPage, this.activePage * this.itemsPerPage + this.itemsPerPage);
@@ -151,14 +152,14 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   triggerOpenViewEditDialog(item: any) {
-    debugger;
+    // debugger;
     this.recordId = item.id;
-    this.tableMode = 'modal';
+    this.tableMode = 'load';
     this.triggerTableRecordLoad(this.origin, this.tableRecordEndPoint, item.id);
   }
 
   openViewEditDialog(id: string) {
-    debugger;
+    // debugger;
     this.dialogAction = '';
     const recordDetail = getItemBasedId(this.records, id);
     this.dialogRef = this.dialog.open(DialogComponent, {
@@ -180,19 +181,24 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.dialogRef.beforeClosed().subscribe(result => {
-      debugger;
+      // debugger;
       console.log(`Dialog result: ${result}`);
       this.dialogAction = result;
-      this.recordId = '';
-      this.tableMode = '';
+      // this.recordId = '';
+      if (this.dialogAction === 'submitBtn') {
+        this.tableMode = 'save';
+      }
+
     });
 
     this.dialogRef.afterClosed().subscribe(result => {
       // debugger;
       console.log(`Dialog result: ${result}`);
       this.dialogAction = result;
-      this.recordId = '';
-      this.tableMode = '';
+      // this.recordId = '';
+      if (this.dialogAction === 'submitBtn') {
+        this.tableMode = 'save';
+      }
     });
   }
 
