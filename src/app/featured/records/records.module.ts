@@ -5,6 +5,7 @@ import { RecordsRoutingModule } from './records-routing.module';
 import { TableComponent } from './containers/table/table.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MaterialModule } from 'src/app/material.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { MaterialModule } from 'src/app/material.module';
     CommonModule,
     SharedModule,
     MaterialModule,
-    RecordsRoutingModule
+    RecordsRoutingModule,
+    FormsModule
   ]
 })
 export class RecordsModule { }

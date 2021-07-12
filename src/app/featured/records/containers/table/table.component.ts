@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { compareValues, getIndexBasedId, getItemBasedId } from 'src/app/shared/utils/helper';
 import { AppState } from 'src/app/state';
 import { RecordLoadDetail, RecordsLoad } from 'src/app/state/records/records.actions';
@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { compare } from 'natural-orderby';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-table',
@@ -30,7 +31,10 @@ export class TableComponent implements OnInit, OnDestroy {
   dialogRef: MatDialogRef<any>;
   recordId: string = '';
   dialogAction: string = '';
-  tableMode: 'init'|'load'|'save'|'' = '';
+  tableMode: 'init' | 'load' | 'save' | '' = '';
+  globalFilter: string = '';
+  isSearching: boolean = false;
+  searchTextChanged: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(
     private store: Store<AppState>,
@@ -40,8 +44,9 @@ export class TableComponent implements OnInit, OnDestroy {
     this.tableDataEndPoint = environment.beTableDataEndPoint;
     this.tableRecordEndPoint = environment.beTableRecordEndPoint;
     this.tableMode = 'init';
-    this.triggerTableLoad(this.origin, this.tableDataEndPoint);
+    this.triggerTableLoad();
     this.tableDataSubscription();
+    this.processGlobalSearch();
   }
 
   ngOnInit(): void {
@@ -51,9 +56,9 @@ export class TableComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  triggerTableLoad(origin: string, dataEndPoint: string): void {
+  triggerTableLoad(): void {
     // debugger;
-    const url = `${origin}${dataEndPoint}`;
+    const url = `${this.origin}${this.tableDataEndPoint}`;
     this.store.dispatch(new RecordsLoad(url));
   }
 
@@ -135,7 +140,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   sortByColumn(colname: string) {
     this.sortByCol = {};
-    let direction: 'asc'|'desc';
+    let direction: 'asc' | 'desc';
     if (this.sortBy !== colname) {
       direction = 'asc';
       this.sortBy = colname;
@@ -200,6 +205,40 @@ export class TableComponent implements OnInit, OnDestroy {
         this.tableMode = 'save';
       }
     });
+  }
+
+  globalSearch() {
+    this.isSearching = true;
+    this.searchTextChanged.next(this.globalFilter);
+  }
+
+  clearAllFilters() {
+    // debugger;
+    this.globalFilter = '';
+    this.globalSearch();
+  }
+
+  processGlobalSearch() {
+    // debugger;
+    this.subscription.add(
+      this.searchTextChanged.pipe(debounceTime(1000)).subscribe(
+        response => {
+          // debugger;
+          this.isSearching = false;
+          const res = response.trim();
+          if (res) {
+            const url = `${this.origin}${this.tableDataEndPoint}`;
+            this.store.dispatch(new RecordsLoad(url));
+          } else {
+            const url = `${this.origin}${this.tableDataEndPoint}`;
+            this.store.dispatch(new RecordsLoad(url));
+          }
+        },
+        error => {
+          this.isSearching = false;
+          throw error;
+        }
+      ));
   }
 
 
