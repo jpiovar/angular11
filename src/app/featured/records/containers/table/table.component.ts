@@ -227,11 +227,13 @@ export class TableComponent implements OnInit, OnDestroy {
           this.isSearching = false;
           const res = response.trim();
           if (res) {
-            const url = `${this.origin}${this.tableDataEndPoint}`;
-            this.store.dispatch(new RecordsLoad(url));
+            this.records = this.getFilteredRecords(this.originalRecords, res);
+            // const url = `${this.origin}${this.tableDataEndPoint}`;
+            // this.store.dispatch(new RecordsLoad(url));
           } else {
-            const url = `${this.origin}${this.tableDataEndPoint}`;
-            this.store.dispatch(new RecordsLoad(url));
+            this.records = JSON.parse(JSON.stringify(this.originalRecords));
+            // const url = `${this.origin}${this.tableDataEndPoint}`;
+            // this.store.dispatch(new RecordsLoad(url));
           }
         },
         error => {
@@ -239,6 +241,10 @@ export class TableComponent implements OnInit, OnDestroy {
           throw error;
         }
       ));
+  }
+
+  getFilteredRecords(records: any[], propertyValue: string) {
+    return records.filter(item => item.firstname.indexOf(propertyValue)>-1 || item.surname.indexOf(propertyValue)>-1 || item.age.indexOf(propertyValue)>-1);
   }
 
 
