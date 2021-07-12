@@ -233,6 +233,7 @@ export class TableComponent implements OnInit, OnDestroy {
             if (this.searchMode === 'global') {
               this.sortedOriginalRecords = this.getFilteredRecords(this.originalRecords, res);
               this.sortBy = '';
+              this.activePage = 0;
               this.sortByColumn(this.sortBy);
               this.setPagesRecords();
             }
@@ -240,6 +241,8 @@ export class TableComponent implements OnInit, OnDestroy {
             // this.store.dispatch(new RecordsLoad(url));
           } else {
             if (this.searchMode === 'global') {
+              this.activePage = 0;
+              this.sortedOriginalRecords = JSON.parse(JSON.stringify(this.originalRecords));
               this.setPagesRecords();
             }
             // const url = `${this.origin}${this.tableDataEndPoint}`;
