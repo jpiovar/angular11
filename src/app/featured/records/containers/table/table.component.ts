@@ -32,6 +32,7 @@ export class TableComponent implements OnInit, OnDestroy {
   recordId: string = '';
   dialogAction: string = '';
   tableMode: 'init' | 'load' | 'save' | '' = '';
+  searchMode: 'init' | 'global' | '';
   globalFilter: string = '';
   isSearching: boolean = false;
   searchTextChanged: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -44,6 +45,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.tableDataEndPoint = environment.beTableDataEndPoint;
     this.tableRecordEndPoint = environment.beTableRecordEndPoint;
     this.tableMode = 'init';
+    this.searchMode = 'init';
     this.triggerTableLoad();
     this.tableDataSubscription();
     this.processGlobalSearch();
@@ -139,6 +141,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   sortByColumn(colname: string) {
+    // debugger;
     this.sortByCol = {};
     let direction: 'asc' | 'desc';
     if (this.sortBy !== colname) {
@@ -227,14 +230,22 @@ export class TableComponent implements OnInit, OnDestroy {
           this.isSearching = false;
           const res = response.trim();
           if (res) {
-            this.records = this.getFilteredRecords(this.originalRecords, res);
+            if (this.searchMode === 'global') {
+              this.sortedOriginalRecords = this.getFilteredRecords(this.originalRecords, res);
+              this.sortBy = '';
+              this.sortByColumn(this.sortBy);
+              this.setPagesRecords();
+            }
             // const url = `${this.origin}${this.tableDataEndPoint}`;
             // this.store.dispatch(new RecordsLoad(url));
           } else {
-            this.records = JSON.parse(JSON.stringify(this.originalRecords));
+            if (this.searchMode === 'global') {
+              this.setPagesRecords();
+            }
             // const url = `${this.origin}${this.tableDataEndPoint}`;
             // this.store.dispatch(new RecordsLoad(url));
           }
+          this.searchMode = 'global';
         },
         error => {
           this.isSearching = false;
@@ -244,7 +255,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   getFilteredRecords(records: any[], propertyValue: string) {
-    return records.filter(item => item.firstname.indexOf(propertyValue)>-1 || item.surname.indexOf(propertyValue)>-1 || item.age.indexOf(propertyValue)>-1);
+    return records.filter(item => item.firstname.indexOf(propertyValue) > -1 || item.surname.indexOf(propertyValue) > -1 || item.age.indexOf(propertyValue) > -1);
   }
 
 
