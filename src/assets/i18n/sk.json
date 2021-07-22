@@ -1,6 +1,6 @@
 {
   "MAIN": {
-    "APP-NAME": "Angular11 {{value}}"
+    "APP-NAME": "Angular11-12 {{value}}"
   },
   "HOME": {
     "main": "welcome home"

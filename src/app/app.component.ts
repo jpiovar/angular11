@@ -15,7 +15,7 @@ import { StartSpinner, StopSpinner } from './state/spinner/spinner.actions';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy {
-  title = 'angular11';
+  title = 'angular11-12';
   openedSidenav: boolean = false;
   subscription: Subscription = new Subscription();
   configData$: ConfigState = null;

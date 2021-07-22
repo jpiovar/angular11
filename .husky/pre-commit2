@@ -13,4 +13,4 @@ do
     DESTINATIONS="$DESTINATIONS$DELIMITER${src}"
 done
 
-cd angular11 && ng lint $PROJECT $DESTINATIONS
+cd angular11-12 && ng lint $PROJECT $DESTINATIONS
