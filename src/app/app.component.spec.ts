@@ -1,8 +1,20 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ToastrModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
 
 describe('AppComponent', () => {
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule, StoreModule.forRoot({}), TranslateModule.forRoot(), CoreModule, ToastrModule.forRoot()],
+      declarations: [],
+    }).compileComponents();
+  }));
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
