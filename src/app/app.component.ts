@@ -9,6 +9,7 @@ import { AppState } from './state';
 import { ConfigState } from './state/config/config.models';
 import { StartSpinner, StopSpinner } from './state/spinner/spinner.actions';
 
+import * as plantandgo from '@plantandgo/helpers';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -29,6 +30,7 @@ export class AppComponent implements OnDestroy {
     // private router: Router,
     // private httpBase: HttpBaseService,
   ) {
+    console.log('current browser is Explorer ', plantandgo.isExplorer());
     translate.addLangs(['sk']);
     translate.setDefaultLang('sk');
     const browserLang = translate.getBrowserLang();
