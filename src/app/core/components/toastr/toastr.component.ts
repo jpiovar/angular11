@@ -22,11 +22,11 @@ export class ToastrComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private toastr: ToastrService
   ) {
-    this.subscription.add(store.select('toastr').subscribe(({ isOn, duration, title, text, type }) => {
+    this.subscription.add(store.select('toastr').subscribe(res => {
       // debugger;
-      this.toastr$ = isOn;
+      this.toastr$ = res?.isOn;
       if (this.toastr$) {
-        this.openToastr(title, text, duration, type);
+        this.openToastr(res?.title, res?.text, res?.duration, res?.type);
       }
     }));
     // this.subscription.add(store.select('sizeDetector').subscribe(({ grid }) => {

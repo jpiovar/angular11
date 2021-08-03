@@ -74,7 +74,7 @@ export class DynamicContentComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(): void {
     // debugger;
-    // this.dynamicName;
+    console.log(this.dynamicName);
     this.subscription.add(
       combineLatest([this.store.select('router'), this.store.select('config')]).subscribe(
         ([res1, res2]) => {

@@ -14,8 +14,8 @@ export class SpinnerComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
 
   constructor(private store: Store<AppState>) {
-    this.subscription.add(store.select('spinner').subscribe(({ isOn }) => {
-      this.spinner$ = isOn;
+    this.subscription.add(store.select('spinner').subscribe(res => {
+      this.spinner$ = res?.isOn;
     }));
   }
 

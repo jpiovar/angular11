@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { ToastrComponent } from './toastr.component';
 
@@ -13,7 +13,7 @@ describe('ToastrComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         StoreModule.forRoot({}),
-        ToastrService
+        ToastrModule.forRoot()
       ],
       declarations: [ ToastrComponent ],
       providers: [ToastrService]
@@ -32,7 +32,7 @@ describe('ToastrComponent', () => {
     component = null;
   });
 
-  xit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

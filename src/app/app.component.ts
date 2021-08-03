@@ -30,11 +30,11 @@ export class AppComponent implements OnDestroy {
     // private router: Router,
     // private httpBase: HttpBaseService,
   ) {
-    console.log('current browser is Explorer ', plantandgo.isExplorer());
-    translate.addLangs(['sk']);
-    translate.setDefaultLang('sk');
-    const browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/sk/) ? browserLang : 'sk');
+    console.log('current browser is Explorer ', plantandgo?.isExplorer());
+    translate?.addLangs(['sk']);
+    translate?.setDefaultLang('sk');
+    const browserLang = translate?.getBrowserLang();
+    translate?.use(browserLang.match(/sk/) ? browserLang : 'sk');
 
     this.translationSubscribe();
 
@@ -56,11 +56,11 @@ export class AppComponent implements OnDestroy {
     // );
 
     this.subscription.add(
-      this.store.select('config').subscribe(({ data, loading, error }) => {
+      this.store?.select('config').subscribe(res => {
         // debugger;
-        this.configData$ = { data, loading, error };
+        this.configData$ = res;
 
-        if (this.configData$ && this.configData$.loading) {
+        if (this.configData$ && this.configData$?.loading) {
           this.store.dispatch(new StartSpinner());
         } else {
           this.store.dispatch(new StopSpinner());
@@ -73,13 +73,13 @@ export class AppComponent implements OnDestroy {
   translationSubscribe() {
     // currently just for example of usage
     this.subscription.add(
-      this.translate.get('MAIN.APP-NAME', this.languageParam).subscribe((res: string) => {
+      this.translate?.get('MAIN.APP-NAME', this.languageParam).subscribe((res: string) => {
         console.log(res);
       })
     );
 
     this.subscription.add(
-      this.translate.get('HOME').subscribe(obj => this.translation = obj)
+      this.translate?.get('HOME').subscribe(obj => this.translation = obj)
     );
   }
 

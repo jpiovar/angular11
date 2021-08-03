@@ -513,7 +513,7 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-md-12">
-        <mat-sidenav-container fullscreen>
+        <mat-sidenav-container fullscreen *ngIf="configData$">
           <mat-sidenav #sidenav [(opened)]="openedSidenav" mode="side" [fixedInViewport]="true">
             <app-sidenav-menu [configData]="configData$"></app-sidenav-menu>
           </mat-sidenav>

@@ -34,10 +34,10 @@ export class DialogComponent implements OnInit {
     this.content = this.data;
     this.modifiedContent = JSON.parse(JSON.stringify(this.content));
 
-    this.dialogRef.afterClosed().subscribe(result => {
-      // debugger;
-      console.log(`Dialog result: ${result}`);
-    });
+    // this.dialogRef?.afterClosed()?.subscribe(result => {
+    //   // debugger;
+    //   console.log(`Dialog result: ${result}`);
+    // });
   }
 
   submit() {

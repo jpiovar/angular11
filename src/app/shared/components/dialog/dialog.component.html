@@ -31,10 +31,10 @@
         <button type="button" class="btn btn-primary m-1" (click)="content.mode='view'; confirmChanges()">View mode and Confirm changes</button><br/>
         <button type="button" class="btn btn-primary m-1" (click)="content.mode='view'; cancelChanges()">View mode and Cancel changes</button>
       </p>
-      Firstname: <input type="text" id="firstname" name="firstname" [(ngModel)]="modifiedContent.details.firstname"><br />
-      Surname: <input type="text" id="surname" name="surname" [(ngModel)]="modifiedContent.details.surname"><br />
-      Age: <input type="text" id="age" name="age" [(ngModel)]="modifiedContent.details.age"><br />
-      Details: <input type="text" id="details" name="details" [(ngModel)]="modifiedContent.details.details">
+      Firstname: <input type="text" id="firstname" name="firstname" [(ngModel)]="modifiedContent && modifiedContent.details && modifiedContent.details.firstname"><br />
+      Surname: <input type="text" id="surname" name="surname" [(ngModel)]="modifiedContent && modifiedContent.details && modifiedContent.details.surname"><br />
+      Age: <input type="text" id="age" name="age" [(ngModel)]="modifiedContent && modifiedContent.details && modifiedContent.details.age"><br />
+      Details: <input type="text" id="details" name="details" [(ngModel)]="modifiedContent && modifiedContent.details && modifiedContent.details.details">
     </ng-template>
 
   </ng-container>

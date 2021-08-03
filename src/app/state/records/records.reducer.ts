@@ -47,7 +47,7 @@ export function reducer(state = initialState, action: RecordsActions.Actions): R
       // debugger;
       const rowId = action.payload.id;
       const detailData = action.payload.detail;
-      const newState = JSON.parse(JSON.stringify(state.data));
+      const newState = JSON.parse(JSON.stringify(state?.data));
       const index = getIndexBasedId(newState, rowId);
       newState[index]['data'] = detailData;
       return {
@@ -79,7 +79,7 @@ export function reducer(state = initialState, action: RecordsActions.Actions): R
       const actionType = action.payload.actionType || 'new';
       const recordRow = action.payload.recordRow;
       const rowId = recordRow.id;
-      const newState = JSON.parse(JSON.stringify(state.data));
+      const newState = JSON.parse(JSON.stringify(state?.data));
       const index = getIndexBasedId(newState, rowId);
       if (actionType === 'new') {
         newState.unshift(recordRow);
